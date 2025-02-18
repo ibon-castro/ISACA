@@ -66,8 +66,34 @@ label {
   max-width: 400px;
 }
 
+/* Custom checkbox styling */
 label input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #007BFF;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
   margin-right: 10px;
+}
+
+label input[type="checkbox"]:checked {
+  background-color: #007BFF;
+}
+
+label input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 button[type="submit"] {
