@@ -64,8 +64,9 @@
       <h2>Asistencia</h2>
       <form @submit.prevent="submitTalks">
         <div class="form-group">
-          <label for="talks-email">Email:</label>
+          <label for="talks-email">Correo:</label>
           <input type="email" id="talks-email" v-model="talks.email" required>
+          <p class="reminder">Recuerda que debes registrarte en la pestaña "Registro" si aún no lo has hecho.</p>
         </div>
         <div class="form-group">
           <label for="talks-select">Selecciona la charla:</label>
@@ -85,7 +86,8 @@
     new Vue({
       el: "#app",
       data: {
-        currentTab: 'register',
+        // Set default tab to 'talks' so that it appears first.
+        currentTab: 'talks',
         registration: {
           name: '',
           surnames: '',
