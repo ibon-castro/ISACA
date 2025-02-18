@@ -1,14 +1,126 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ISACA</title>
-
-    <!-- Vue.js -->
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ISACA</title>
+  <!-- Link to external CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- Vue.js -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 </head>
 <body>
+  <div id="app">
     <h1>Hello ISACA!</h1>
+    
+    <!-- Navigation Tabs -->
+    <div class="tabs">
+      <button :class="{active: currentTab==='register'}" @click="currentTab='register'">Register</button>
+      <button :class="{active: currentTab==='talks'}" @click="currentTab='talks'">Talks</button>
+    </div>
+
+    <!-- Registration Form -->
+    <div v-if="currentTab === 'register'" class="form-container">
+      <h2>Registration Form</h2>
+      <form @submit.prevent="submitRegistration">
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input type="text" id="name" v-model="registration.name" required>
+        </div>
+        <div class="form-group">
+          <label for="surnames">Surnames:</label>
+          <input type="text" id="surnames" v-model="registration.surnames" required>
+        </div>
+        <div class="form-group">
+          <label for="age">Age:</label>
+          <input type="number" id="age" v-model="registration.age" min="0" required>
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" v-model="registration.isStudent">
+            I am a student
+          </label>
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" v-model="registration.isacaMadrid">
+            I am associated with ISACA Madrid
+          </label>
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" v-model="registration.email" required>
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" v-model="registration.acceptData">
+            I accept to get my data
+          </label>
+        </div>
+        <button type="submit">Submit Registration</button>
+      </form>
+    </div>
+
+    <!-- Talks Selection Form -->
+    <div v-if="currentTab === 'talks'" class="form-container">
+      <h2>Select Talks</h2>
+      <form @submit.prevent="submitTalks">
+        <div class="form-group">
+          <label for="talks-email">Email:</label>
+          <input type="email" id="talks-email" v-model="talks.email" required>
+        </div>
+        <div class="form-group">
+          <p>Choose your talks:</p>
+          <div v-for="talk in talksList" :key="talk.id" class="talk-option">
+            <label>
+              <input type="checkbox" :value="talk.id" v-model="talks.selectedTalks">
+              {{ talk.title }}
+            </label>
+          </div>
+        </div>
+        <button type="submit">Submit Talks Selection</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: "#app",
+      data: {
+        currentTab: 'register',
+        registration: {
+          name: '',
+          surnames: '',
+          age: null,
+          isStudent: false,
+          isacaMadrid: false,
+          email: '',
+          acceptData: false
+        },
+        talks: {
+          email: '',
+          selectedTalks: []
+        },
+        talksList: [
+          { id: 1, title: 'Talk 1: Cybersecurity Trends' },
+          { id: 2, title: 'Talk 2: Data Privacy' },
+          { id: 3, title: 'Talk 3: IT Governance' },
+          { id: 4, title: 'Talk 4: Cloud Computing' }
+        ]
+      },
+      methods: {
+        submitRegistration() {
+          console.log('Registration submitted:', this.registration);
+          alert('Registration submitted! Check the console for details.');
+          // Integration with Firebase can be added here.
+        },
+        submitTalks() {
+          console.log('Talks selection submitted:', this.talks);
+          alert('Talks selection submitted! Check the console for details.');
+          // Integration with Firebase can be added here.
+        }
+      }
+    });
+  </script>
 </body>
 </html>
