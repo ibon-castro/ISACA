@@ -11,10 +11,10 @@
 </head>
 <body>
   <div id="app">
-    <!-- Navigation Tabs -->
+    <!-- Navigation Tabs (Reversed Order) -->
     <div class="tabs">
-      <button :class="{active: currentTab==='register'}" @click="currentTab='register'">Registro</button>
       <button :class="{active: currentTab==='talks'}" @click="currentTab='talks'">Asistencia</button>
+      <button :class="{active: currentTab==='register'}" @click="currentTab='register'">Registro</button>
     </div>
 
     <!-- Registration Form -->
