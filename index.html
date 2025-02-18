@@ -108,12 +108,14 @@
       },
       methods: {
         submitRegistration() {
-          console.log('Registration submitted:', this.registration);
-          alert('Registration submitted! Check the console for details.');
+          alert('Registro terminado!');
+
+          // Automatically set the email in the talks form and switch tab.
+          this.talks.email = this.registration.email;
+          this.currentTab = 'talks';
           // Integration with Firebase can be added here.
         },
         submitTalks() {
-          console.log('Talks selection submitted:', this.talks);
           alert('Talks selection submitted! Check the console for details.');
           // Integration with Firebase can be added here.
         }
