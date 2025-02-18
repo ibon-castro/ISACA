@@ -68,13 +68,13 @@
           <input type="email" id="talks-email" v-model="talks.email" required>
         </div>
         <div class="form-group">
-          <p>Selecciona la charla:</p>
-          <div v-for="talk in talksList" :key="talk.id" class="talk-option">
-            <label>
-              <input type="checkbox" :value="talk.id" v-model="talks.selectedTalks">
+          <label for="talks-select">Selecciona la charla:</label>
+          <select id="talks-select" v-model="talks.selectedTalk" required>
+            <option disabled value="">Por favor, selecciona una charla</option>
+            <option v-for="talk in talksList" :key="talk.id" :value="talk.id">
               {{ talk.title }}
-            </label>
-          </div>
+            </option>
+          </select>
         </div>
         <button type="submit">He asistido</button>
       </form>
@@ -97,7 +97,8 @@
         },
         talks: {
           email: '',
-          selectedTalks: []
+          // Changed from an array to a single value since only one talk is selected.
+          selectedTalk: ''
         },
         talksList: [
           { id: 1, title: 'Talk 1: Cybersecurity Trends' },
@@ -109,14 +110,14 @@
       methods: {
         submitRegistration() {
           alert('Registro terminado!');
-
           // Automatically set the email in the talks form and switch tab.
           this.talks.email = this.registration.email;
           this.currentTab = 'talks';
           // Integration with Firebase can be added here.
         },
         submitTalks() {
-          alert('Talks selection submitted! Check the console for details.');
+          alert('Asistencia registrada!');
+          console.log('Asistencia:', this.talks);
           // Integration with Firebase can be added here.
         }
       }
