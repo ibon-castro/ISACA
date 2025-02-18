@@ -1,82 +1,44 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ISACA</title>
-  <!-- Link to external CSS -->
   <link rel="stylesheet" href="css/styles.css">
-  <!-- Vue.js -->
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 </head>
 <body>
-  <div id="app">
-    <!-- Navigation Tabs (Reversed Order) -->
+  <div id="app" class="container">
+    <img src="img/ISACA_logo.png" alt="ISACA Logo" class="logo">
+    
     <div class="tabs">
       <button :class="{active: currentTab==='talks'}" @click="currentTab='talks'">Asistencia</button>
       <button :class="{active: currentTab==='register'}" @click="currentTab='register'">Registro</button>
     </div>
 
-    <!-- Registration Form -->
     <div v-if="currentTab === 'register'" class="form-container">
       <h2>Registro</h2>
       <form @submit.prevent="submitRegistration">
-        <div class="form-group">
-          <label for="name">Nombre:</label>
-          <input type="text" id="name" v-model="registration.name" required>
-        </div>
-        <div class="form-group">
-          <label for="surnames">Apellidos:</label>
-          <input type="text" id="surnames" v-model="registration.surnames" required>
-        </div>
-        <div class="form-group">
-          <label for="age">Edad:</label>
-          <input type="number" id="age" v-model="registration.age" min="0" required>
-        </div>
-        <div class="form-group">
-          <label>
-            <input type="checkbox" v-model="registration.isStudent">
-            Soy estudiante
-          </label>
-        </div>
-        <div class="form-group">
-          <label>
-            <input type="checkbox" v-model="registration.isacaMadrid">
-            Soy miembro de ISACA Madrid
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="email">Correo:</label>
-          <input type="email" id="email" v-model="registration.email" required>
-        </div>
-        <div class="form-group">
-          <label>
-            <input type="checkbox" v-model="registration.acceptData">
-            Acepto el procesamiento de mis datos
-          </label>
-        </div>
+        <input type="text" v-model="registration.name" placeholder="Nombre" required>
+        <input type="text" v-model="registration.surnames" placeholder="Apellidos" required>
+        <input type="number" v-model="registration.age" placeholder="Edad" min="0" required>
+        <label><input type="checkbox" v-model="registration.isStudent"> Soy estudiante</label>
+        <label><input type="checkbox" v-model="registration.isacaMadrid"> Soy miembro de ISACA Madrid</label>
+        <input type="email" v-model="registration.email" placeholder="Correo" required>
+        <label><input type="checkbox" v-model="registration.acceptData"> Acepto el procesamiento de mis datos</label>
         <button type="submit">Registrarse</button>
       </form>
     </div>
 
-    <!-- Talks Selection Form -->
     <div v-if="currentTab === 'talks'" class="form-container">
       <h2>Asistencia</h2>
       <form @submit.prevent="submitTalks">
-        <div class="form-group">
-          <label for="talks-email">Correo:</label>
-          <input type="email" id="talks-email" v-model="talks.email" required>
-          <p class="reminder">Recuerda que debes registrarte en la pestaña "Registro" si aún no lo has hecho.</p>
-        </div>
-        <div class="form-group">
-          <label for="talks-select">Selecciona la charla:</label>
-          <select id="talks-select" v-model="talks.selectedTalk" required>
-            <option disabled value="">Por favor, selecciona una charla</option>
-            <option v-for="talk in talksList" :key="talk.id" :value="talk.id">
-              {{ talk.title }}
-            </option>
-          </select>
-        </div>
+        <input type="email" v-model="talks.email" placeholder="Correo" required>
+        <p class="reminder">Recuerda registrarte si aún no lo has hecho.</p>
+        <select v-model="talks.selectedTalk" required>
+          <option disabled value="">Selecciona una charla</option>
+          <option v-for="talk in talksList" :key="talk.id" :value="talk.id">{{ talk.title }}</option>
+        </select>
         <button type="submit">He asistido</button>
       </form>
     </div>
@@ -86,41 +48,25 @@
     new Vue({
       el: "#app",
       data: {
-        // Set default tab to 'talks' so that it appears first.
         currentTab: 'talks',
-        registration: {
-          name: '',
-          surnames: '',
-          age: null,
-          isStudent: false,
-          isacaMadrid: false,
-          email: '',
-          acceptData: false
-        },
-        talks: {
-          email: '',
-          // Changed from an array to a single value since only one talk is selected.
-          selectedTalk: ''
-        },
+        registration: { name: '', surnames: '', age: null, isStudent: false, isacaMadrid: false, email: '', acceptData: false },
+        talks: { email: '', selectedTalk: '' },
         talksList: [
-          { id: 1, title: 'Talk 1: Cybersecurity Trends' },
-          { id: 2, title: 'Talk 2: Data Privacy' },
-          { id: 3, title: 'Talk 3: IT Governance' },
-          { id: 4, title: 'Talk 4: Cloud Computing' }
+          { id: 1, title: 'Cybersecurity Trends' },
+          { id: 2, title: 'Data Privacy' },
+          { id: 3, title: 'IT Governance' },
+          { id: 4, title: 'Cloud Computing' }
         ]
       },
       methods: {
         submitRegistration() {
-          alert('Registro terminado!');
-          // Automatically set the email in the talks form and switch tab.
+          alert('Registro completado!');
           this.talks.email = this.registration.email;
           this.currentTab = 'talks';
-          // Integration with Firebase can be added here.
         },
         submitTalks() {
           alert('Asistencia registrada!');
           console.log('Asistencia:', this.talks);
-          // Integration with Firebase can be added here.
         }
       }
     });
