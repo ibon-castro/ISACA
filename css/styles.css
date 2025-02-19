@@ -84,3 +84,10 @@ button[type="submit"] {
 button[type="submit"]:hover {
   background-color: #0056b3;
 }
+
+.form-logo {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto 15px;
+}

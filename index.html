@@ -19,6 +19,7 @@
 
     <!-- Registration Form -->
     <div v-if="currentTab === 'register'" class="form-container">
+      <img src="img/ISACA_logo.png" alt="ISACA Logo" class="form-logo">
       <h2>Registro</h2>
       <form @submit.prevent="submitRegistration">
         <div class="form-group">
@@ -61,6 +62,7 @@
 
     <!-- Talks Selection Form -->
     <div v-if="currentTab === 'talks'" class="form-container">
+      <img src="img/ISACA_logo.png" alt="ISACA Logo" class="form-logo">
       <h2>Asistencia</h2>
       <form @submit.prevent="submitTalks">
         <div class="form-group">
