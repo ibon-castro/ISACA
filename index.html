@@ -112,7 +112,24 @@
           { id: 2, title: 'Talk 2: Data Privacy' },
           { id: 3, title: 'Talk 3: IT Governance' },
           { id: 4, title: 'Talk 4: Cloud Computing' }
-        ]
+        ],
+        selectedTalkTitle: ''
+      },
+      mounted() {
+        const params = new URLSearchParams(window.location.search);
+        const talkId = params.get('talk_id');
+        if (talkId) {
+          // Convert to integer
+          const id = parseInt(talkId);
+          this.talks.selectedTalk = id;
+          // Find the talk title from talksList
+          const talk = this.talksList.find(t => t.id === id);
+          if (talk) {
+            this.selectedTalkTitle = talk.title;
+          } else {
+            this.selectedTalkTitle = "Charla no encontrada";
+          }
+        }
       },
       methods: {
         submitRegistration() {
@@ -124,7 +141,6 @@
         },
         submitTalks() {
           alert('Asistencia registrada!');
-          console.log('Asistencia:', this.talks);
           // Integration with Firebase can be added here.
         }
       }
