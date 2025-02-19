@@ -68,18 +68,21 @@
         <div class="form-group">
           <label for="talks-email">Correo:</label>
           <input type="email" id="talks-email" v-model="talks.email" required>
-          <p class="reminder">Recuerda que debes registrarte en la pestaña "Registro" si aún no lo has hecho.</p>
         </div>
-        <div class="form-group">
-          <label for="talks-select">Selecciona la charla:</label>
-          <select id="talks-select" v-model="talks.selectedTalk" required>
-            <option disabled value="">Por favor, selecciona una charla</option>
-            <option v-for="talk in talksList" :key="talk.id" :value="talk.id">
-              {{ talk.title }}
-            </option>
-          </select>
+
+        <!-- Display the talk title if talk_id is provided -->
+        <div class="form-group" v-if="selectedTalkTitle">
+          <label>Charla seleccionada:</label>
+          <p class="talk-title">{{ selectedTalkTitle }}</p>
+          <!-- Hidden field to store the talk id -->
+          <input type="hidden" v-model="talks.selectedTalk">
         </div>
-        <button type="submit">He asistido</button>
+        <!-- Fallback if no talk_id is provided -->
+        <div class="form-group" v-else>
+          <p class="error">No se ha especificado una charla en la URL.</p>
+        </div>
+
+        <button type="submit" :disabled="!selectedTalkTitle">He asistido</button>
       </form>
     </div>
   </div>
