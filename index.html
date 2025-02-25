@@ -87,13 +87,15 @@
           <li>Asistir a un mínimo de tres charlas de nuestro track y registrar tu asistencia con cada QR.</li>
         </ul>
       </div>
-      
+
       <h2>Asistencia</h2>
       <form @submit.prevent="submitTalks">
         <div class="form-group">
           <label for="talks-email">Correo:</label>
           <input type="email" id="talks-email" v-model="talks.email" required>
-          <p class="reminder">Regístrate en la pestaña "Registro" si aún no lo has hecho.</p>
+          <p class="reminder">
+            Regístrate en la pestaña <a href="#" @click.prevent="currentTab='register'">"Registro"</a> si aún no lo has hecho.
+          </p>
         </div>
 
         <!-- Display the talk title if talk_id is provided -->

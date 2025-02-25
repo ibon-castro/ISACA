@@ -63,17 +63,36 @@ h1 {
   border-radius: 4px;
 }
 
-/* Alerta de Recordatorio */
+/* Reminder Alert with Cool Transition */
 .reminder {
-  background-color: #f8d7da; /* Rojo suave */
-  color: #721c24; /* Rojo oscuro para el texto */
+  background-color: #f8d7da; /* Soft red background */
+  color: #721c24; /* Dark red text */
   padding: 10px;
   border-radius: 5px;
   font-size: 0.9em;
   text-align: center;
   margin-top: 10px;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
 }
 
+/* Hover Effect */
+.reminder:hover {
+  background-color: #f1b0b7; /* Lighter red */
+  transform: scale(1.05); /* Slight zoom effect */
+}
+
+/* Hyperlink Styling */
+.reminder a {
+  color: #721c24;
+  font-weight: bold;
+  text-decoration: underline;
+  transition: color 0.3s ease-in-out;
+}
+
+.reminder a:hover {
+  color: #d32f2f; /* Brighter red */
+  text-decoration: none;
+}
 
 
 /* Submit Button */
