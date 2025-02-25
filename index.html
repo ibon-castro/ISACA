@@ -11,6 +11,11 @@
 </head>
 <body>
   <div id="app">
+    <!-- Disclaimer -->
+    <p class="disclaimer">
+      ⚠️ Esto no es un CTF. Por favor, no intentéis tirar la web. Cualquier mal uso implicará la cancelación de la invitación.
+    </p>
+
     <!-- Navigation Tabs (Reversed Order) -->
     <div class="tabs">
       <button :class="{active: currentTab==='talks'}" @click="currentTab='talks'">Asistencia</button>
@@ -20,6 +25,16 @@
     <!-- Registration Form -->
     <div v-if="currentTab === 'register'" class="form-container">
       <img src="img/ISACA_logo.png" alt="ISACA Logo" class="form-logo">
+
+      <!-- Invitation Message -->
+      <div class="invitation-message">
+        <p><strong>ISACA Madrid te invita a unas pizzas.</strong> Para poder unirte, solo necesitas cumplir con los siguientes requisitos:</p>
+        <ul>
+          <li>Registrarte</li>
+          <li>Asistir a un mínimo de tres charlas de nuestro track y registrar tu asistencia con cada QR.</li>
+        </ul>
+      </div>
+      
       <h2>Registro</h2>
       <form @submit.prevent="submitRegistration">
         <div class="form-group">
@@ -73,7 +88,6 @@
 
         <!-- Display the talk title if talk_id is provided -->
         <div class="form-group" v-if="selectedTalkTitle">
-          <label>Charla seleccionada:</label>
           <p class="talk-title">{{ selectedTalkTitle }}</p>
           <p class="talk-author">Autor: {{ selectedTalkAuthor }}</p>
           <!-- Hidden field to store the talk id -->
