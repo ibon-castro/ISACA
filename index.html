@@ -92,7 +92,7 @@
       <form @submit.prevent="submitTalks">
         <div class="form-group">
           <label for="talks-email">Correo:</label>
-          <input type="email" id="talks-email" v-model="talks.email" required>
+          <input type="email" id="talks-email" v-model="talks.email" @input="checkEmailExists" required>
           <p class="reminder">
             Regístrate en la pestaña "<a href="#" @click.prevent="currentTab='register'">Registro</a>" si aún no lo has hecho.
           </p>
@@ -110,7 +110,7 @@
           <p class="error">No se ha especificado una charla en la URL.</p>
         </div>
 
-        <button type="submit" :disabled="!selectedTalkTitle">He asistido</button>
+        <button type="submit" @click.prevent="submitTalks" :disabled="!emailExists">He asistido</button>
       </form>
     </div>
   </div>
@@ -134,6 +134,7 @@
         talks: {
           email: "",
           selectedTalk: "",
+          emailExists: null,
         },
         talksList: [
           { id: 1, title: "From Theory to Reality: Implementing ISACA’s Digital Trust Framework", author: "Anass Abajtour" },
@@ -166,6 +167,16 @@
         }
       },
       methods: {
+        async checkEmailExists() {
+          if (!this.talks.email) {
+            this.emailExists = null;
+            return;
+          }
+          const q = query(collection(db, "registrations"), where("email", "==", this.talks.email));
+          const querySnapshot = await getDocs(q);
+
+          this.emailExists = !querySnapshot.empty;
+        },
         async submitRegistration() {
           if (!this.registration.acceptData) {
             alert("Debes aceptar el procesamiento de tus datos.");
@@ -181,7 +192,6 @@
               isacaMadrid: this.registration.isacaMadrid,
               email: this.registration.email,
               acceptData: this.registration.acceptData,
-              timestamp: new Date(),
             });
   
             alert("Registro terminado!");
@@ -190,6 +200,24 @@
           } catch (error) {
             console.error("Error registrando usuario:", error);
             alert("Hubo un error al registrar. Intenta de nuevo.");
+          }
+        },
+        async submitTalks() {
+          if (!this.emailExists) {
+            alert("Este correo no está registrado. Por favor, regístrate primero.");
+            return;
+          }
+
+          try {
+            await addDoc(collection(db, "attendance"), {
+              email: this.talks.email,
+              talkId: this.talks.selectedTalk,
+              timestamp: new Date(),
+            });
+
+            alert("Asistencia registrada con éxito.");
+          } catch (error) {
+            alert("Hubo un error al registrar la asistencia. Intenta de nuevo.");
           }
         },
       },
