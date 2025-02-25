@@ -110,7 +110,7 @@
           <p class="error">No se ha especificado una charla en la URL.</p>
         </div>
 
-        <button type="submit" @click.prevent="submitTalks" :disabled="!emailExists">He asistido</button>
+        <button type="submit" @click.prevent="submitTalks" :disabled="!talks.emailExists">He asistido</button>
       </form>
     </div>
   </div>
@@ -169,13 +169,19 @@
       methods: {
         async checkEmailExists() {
           if (!this.talks.email) {
-            this.emailExists = null;
+            this.talks.emailExists = false;
             return;
           }
-          const q = query(collection(db, "registrations"), where("email", "==", this.talks.email));
-          const querySnapshot = await getDocs(q);
 
-          this.emailExists = !querySnapshot.empty;
+          try {
+            const q = query(collection(db, "registrations"), where("email", "==", this.talks.email));
+            const querySnapshot = await getDocs(q);
+            
+            this.talks.emailExists = !querySnapshot.empty;
+          } catch (error) {
+            console.error("Error checking email:", error);
+            this.talks.emailExists = false; // Ensure it disables the button on error
+          }
         },
         async submitRegistration() {
           if (!this.registration.acceptData) {
