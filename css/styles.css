@@ -162,3 +162,17 @@ button[type="submit"]:hover {
 .invitation-message strong {
   color: #007BFF;
 }
+
+
+/* Smooth Transition Between Tabs */
+.form-container {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+}
+
+/* When the form is active, make it visible */
+.form-container.active {
+  opacity: 1;
+  transform: translateY(0);
+}

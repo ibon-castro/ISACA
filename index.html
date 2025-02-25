@@ -23,7 +23,7 @@
     </div>
 
     <!-- Registration Form -->
-    <div v-if="currentTab === 'register'" class="form-container">
+    <div v-if="currentTab === 'register'" class="form-container" :class="{ active: currentTab === 'register' }">
       <img src="img/ISACA_logo.png" alt="ISACA Logo" class="form-logo">
 
       <!-- Invitation Message -->
@@ -76,7 +76,7 @@
     </div>
 
     <!-- Talks Selection Form -->
-    <div v-if="currentTab === 'talks'" class="form-container">
+    <div v-if="currentTab === 'talks'" class="form-container" :class="{ active: currentTab === 'talks' }">
       <img src="img/ISACA_logo.png" alt="ISACA Logo" class="form-logo">
 
       <!-- Invitation Message -->
@@ -94,7 +94,7 @@
           <label for="talks-email">Correo:</label>
           <input type="email" id="talks-email" v-model="talks.email" required>
           <p class="reminder">
-            Regístrate en la pestaña "<a href="#" @click.prevent="currentTab='register'">Registro</a>"" si aún no lo has hecho.
+            Regístrate en la pestaña "<a href="#" @click.prevent="currentTab='register'">Registro</a>" si aún no lo has hecho.
           </p>
         </div>
 
