@@ -110,7 +110,7 @@
           <p class="error">No se ha especificado una charla en la URL.</p>
         </div>
 
-        <button type="submit" @click.prevent="submitTalks" :disabled="!talks.emailExists">He asistido</button>
+        <button type="submit" :disabled="!talks.emailExists">He asistido</button>
       </form>
     </div>
   </div>
@@ -209,7 +209,10 @@
           }
         },
         async submitTalks() {
-          if (!this.emailExists) {
+          // Ensure email is checked first
+          await this.checkEmailExists();
+
+          if (!this.talks.emailExists) {
             alert("Este correo no está registrado. Por favor, regístrate primero.");
             return;
           }
