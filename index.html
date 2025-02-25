@@ -115,46 +115,47 @@
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    import { db, collection, addDoc } from "./js/firebase.js";
+  
     new Vue({
       el: "#app",
       data: {
-        // Set default tab to 'talks' so that it appears first.
-        currentTab: 'talks',
+        currentTab: "talks",
         registration: {
-          name: '',
-          surnames: '',
+          name: "",
+          surnames: "",
           age: null,
           isStudent: false,
           isacaMadrid: false,
-          email: '',
-          acceptData: false
+          email: "",
+          acceptData: false,
         },
         talks: {
-          email: '',
-          selectedTalk: ''
+          email: "",
+          selectedTalk: "",
         },
         talksList: [
-          { id: 1, title: 'From Theory to Reality: Implementing ISACA’s Digital Trust Framework', author: 'Anass Abajtour' },
-          { id: 2, title: 'El auditor del futuro: Cómo la IA está transformando la profesión', author: 'Rafael Troncoso, Pablo González, Pablo Rodríguez, Karla Torres, Águeda de Lara. Modera: José Miguel Cardona' },
-          { id: 3, title: 'Auditando Arquitecturas Software Empresariales', author: 'Elías Grande' },
-          { id: 4, title: 'Active Directory: El eslabón crítico en la ciberseguridad corporativa', author: 'Alex Amorín' },
-          { id: 5, title: 'Orchestrated Insecurity: Breaking Down Common Container Vulnerabilities', author: 'Jose María Pulgar, Carlos Polop' },
-          { id: 6, title: 'LLM Security Audits 101: The Good, the Bad, and the Broken', author: 'Javier del Pino' },
-          { id: 7, title: 'Ciberseguridad industrial: El reto de auditar sin interrumpir', author: 'Erik de Pablo, Enrique Miranda, Ignacio García Egea, Manuel Ballesteros, Ander Galisteo. Modera: Juan José Nombela' },
-          { id: 8, title: 'Más allá del checkbox: Auditoría real de cumplimiento en la nueva era regulatoria', author: 'Andrés Porras, Xavier Sanz i Vives, Guillermo Martín, María Cristina Bausa Rosa, Josune Charola. Modera: Juan Galdon' }
+          { id: 1, title: "From Theory to Reality: Implementing ISACA’s Digital Trust Framework", author: "Anass Abajtour" },
+          { id: 2, title: "El auditor del futuro: Cómo la IA está transformando la profesión", author: "Rafael Troncoso, Pablo González, Pablo Rodríguez, Karla Torres, Águeda de Lara. Modera: José Miguel Cardona" },
+          { id: 3, title: "Auditando Arquitecturas Software Empresariales", author: "Elías Grande" },
+          { id: 4, title: "Active Directory: El eslabón crítico en la ciberseguridad corporativa", author: "Alex Amorín" },
+          { id: 5, title: "Orchestrated Insecurity: Breaking Down Common Container Vulnerabilities", author: "Jose María Pulgar, Carlos Polop" },
+          { id: 6, title: "LLM Security Audits 101: The Good, the Bad, and the Broken", author: "Javier del Pino" },
+          { id: 7, title: "Ciberseguridad industrial: El reto de auditar sin interrumpir", author: "Erik de Pablo, Enrique Miranda, Ignacio García Egea, Manuel Ballesteros, Ander Galisteo. Modera: Juan José Nombela" },
+          { id: 8, title: "Más allá del checkbox: Auditoría real de cumplimiento en la nueva era regulatoria", author: "Andrés Porras, Xavier Sanz i Vives, Guillermo Martín, María Cristina Bausa Rosa, Josune Charola. Modera: Juan Galdon" }
         ],
-        selectedTalkTitle: ''
+        selectedTalkTitle: "",
       },
       mounted() {
         const params = new URLSearchParams(window.location.search);
-        const talkId = params.get('talk_id');
+        const talkId = params.get("talk_id");
         if (talkId) {
           const id = parseInt(talkId);
           this.talks.selectedTalk = id;
-          
+  
           // Find the talk title and author
-          const talk = this.talksList.find(t => t.id === id);
+          const talk = this.talksList.find((t) => t.id === id);
           if (talk) {
             this.selectedTalkTitle = talk.title;
             this.selectedTalkAuthor = talk.author; // Store the author's name
@@ -165,19 +166,36 @@
         }
       },
       methods: {
-        submitRegistration() {
-          alert('Registro terminado!');
-          // Automatically set the email in the talks form and switch tab.
-          this.talks.email = this.registration.email;
-          this.currentTab = 'talks';
-          // Integration with Firebase can be added here.
+        async submitRegistration() {
+          if (!this.registration.acceptData) {
+            alert("Debes aceptar el procesamiento de tus datos.");
+            return;
+          }
+  
+          try {
+            await addDoc(collection(db, "registrations"), {
+              name: this.registration.name,
+              surnames: this.registration.surnames,
+              age: this.registration.age,
+              isStudent: this.registration.isStudent,
+              isacaMadrid: this.registration.isacaMadrid,
+              email: this.registration.email,
+              acceptData: this.registration.acceptData,
+              timestamp: new Date(),
+            });
+  
+            alert("Registro terminado!");
+            this.talks.email = this.registration.email;
+            this.currentTab = "talks";
+          } catch (error) {
+            console.error("Error registrando usuario:", error);
+            alert("Hubo un error al registrar. Intenta de nuevo.");
+          }
         },
-        submitTalks() {
-          alert('Asistencia registrada!');
-          // Integration with Firebase can be added here.
-        }
-      }
+      },
     });
-  </script>
+  </script>  
+
+  <script type="module" src="js/firebase.js"></script>
 </body>
 </html>
