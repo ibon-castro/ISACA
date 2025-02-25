@@ -63,17 +63,17 @@ h1 {
   border-radius: 4px;
 }
 
-/* Reminder Alert */
+/* Alerta de Recordatorio */
 .reminder {
-  background-color: #fff3cd; /* Light yellow background */
-  color: #856404; /* Darker yellow text */
+  background-color: #f8d7da; /* Rojo suave */
+  color: #721c24; /* Rojo oscuro para el texto */
   padding: 10px;
-  border-left: 5px solid #ffc107; /* Left border for emphasis */
   border-radius: 5px;
   font-size: 0.9em;
   text-align: center;
   margin-top: 10px;
 }
+
 
 
 /* Submit Button */
