@@ -63,12 +63,18 @@ h1 {
   border-radius: 4px;
 }
 
-/* Reminder Message */
+/* Reminder Alert */
 .reminder {
+  background-color: #fff3cd; /* Light yellow background */
+  color: #856404; /* Darker yellow text */
+  padding: 10px;
+  border-left: 5px solid #ffc107; /* Left border for emphasis */
+  border-radius: 5px;
   font-size: 0.9em;
-  color: #666;
-  margin-top: 5px;
+  text-align: center;
+  margin-top: 10px;
 }
+
 
 /* Submit Button */
 button[type="submit"] {
