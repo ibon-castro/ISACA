@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ISACA</title>
+  <!-- Link to external CSS -->
   <link rel="stylesheet" href="css/styles.css">
+  <!-- Vue.js -->
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 </head>
 <body>
@@ -108,13 +110,13 @@
           <p class="error">No se ha especificado una charla en la URL.</p>
         </div>
 
-        <button type="submit" @click.prevent="submitTalks" :disabled="!talks.emailExists">He asistido</button>
+        <button type="submit" @click.prevent="submitTalks" :disabled="!emailExists">He asistido</button>
       </form>
     </div>
   </div>
 
   <script type="module">
-    import { db, collection, addDoc, where, query } from "./js/firebase.js";
+    import { db, collection, addDoc } from "./js/firebase.js";
   
     new Vue({
       el: "#app",
@@ -167,19 +169,13 @@
       methods: {
         async checkEmailExists() {
           if (!this.talks.email) {
-            this.talks.emailExists = false;
+            this.emailExists = null;
             return;
           }
+          const q = query(collection(db, "registrations"), where("email", "==", this.talks.email));
+          const querySnapshot = await getDocs(q);
 
-          try {
-            const q = query(collection(db, "registrations"), where("email", "==", this.talks.email));
-            const querySnapshot = await getDocs(q);
-            
-            this.talks.emailExists = !querySnapshot.empty;
-          } catch (error) {
-            console.error("Error checking email:", error);
-            this.talks.emailExists = false;
-          }
+          this.emailExists = !querySnapshot.empty;
         },
         async submitRegistration() {
           if (!this.registration.acceptData) {
