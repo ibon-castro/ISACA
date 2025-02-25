@@ -34,7 +34,7 @@
           <li>Asistir a un mínimo de tres charlas de nuestro track y registrar tu asistencia con cada QR.</li>
         </ul>
       </div>
-      
+
       <h2>Registro</h2>
       <form @submit.prevent="submitRegistration">
         <div class="form-group">
@@ -78,6 +78,16 @@
     <!-- Talks Selection Form -->
     <div v-if="currentTab === 'talks'" class="form-container">
       <img src="img/ISACA_logo.png" alt="ISACA Logo" class="form-logo">
+
+      <!-- Invitation Message -->
+      <div class="invitation-message">
+        <p><strong>ISACA Madrid te invita a unas pizzas.</strong> Para poder unirte, solo necesitas cumplir con los siguientes requisitos:</p>
+        <ul>
+          <li>Registrarte</li>
+          <li>Asistir a un mínimo de tres charlas de nuestro track y registrar tu asistencia con cada QR.</li>
+        </ul>
+      </div>
+      
       <h2>Asistencia</h2>
       <form @submit.prevent="submitTalks">
         <div class="form-group">
