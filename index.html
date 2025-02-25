@@ -92,32 +92,41 @@
       <form @submit.prevent="submitTalks">
         <div class="form-group">
           <label for="talks-email">Correo:</label>
-          <input type="email" id="talks-email" v-model="talks.email" required>
+          <input 
+            type="email" 
+            id="talks-email" 
+            v-model="talks.email" 
+            @input="checkEmailExists" 
+            required
+          >
           <p class="reminder">
             Regístrate en la pestaña "<a href="#" @click.prevent="currentTab='register'">Registro</a>" si aún no lo has hecho.
           </p>
         </div>
-
-        <!-- Display the talk title if talk_id is provided -->
+        
+        <!-- Display warning if email isn't found -->
+        <p v-if="emailExists === false" class="error">⚠️ Correo no registrado. Por favor, regístrate primero.</p>
+        
+        <!-- Display talk info -->
         <div class="form-group" v-if="selectedTalkTitle">
           <p class="talk-title">{{ selectedTalkTitle }}</p>
           <p class="talk-author">Autor: {{ selectedTalkAuthor }}</p>
-          <!-- Hidden field to store the talk id -->
           <input type="hidden" v-model="talks.selectedTalk">
         </div>
-        <!-- Fallback if no talk_id is provided -->
         <div class="form-group" v-else>
           <p class="error">No se ha especificado una charla en la URL.</p>
         </div>
-
-        <button type="submit" :disabled="!selectedTalkTitle">He asistido</button>
+        
+        <!-- Disable submit button if email isn't registered -->
+        <button type="submit" @click.prevent="submitTalks" :disabled="!emailExists">He asistido</button>
+        
       </form>
     </div>
   </div>
 
   <script type="module">
-    import { db, collection, addDoc } from "./js/firebase.js";
-  
+    import { db, collection, getDocs, query, where, addDoc } from "./js/firebase.js";
+
     new Vue({
       el: "#app",
       data: {
@@ -146,6 +155,8 @@
           { id: 8, title: "Más allá del checkbox: Auditoría real de cumplimiento en la nueva era regulatoria", author: "Andrés Porras, Xavier Sanz i Vives, Guillermo Martín, María Cristina Bausa Rosa, Josune Charola. Modera: Juan Galdon" }
         ],
         selectedTalkTitle: "",
+        selectedTalkAuthor: "",
+        emailExists: null,
       },
       mounted() {
         const params = new URLSearchParams(window.location.search);
@@ -153,12 +164,12 @@
         if (talkId) {
           const id = parseInt(talkId);
           this.talks.selectedTalk = id;
-  
+
           // Find the talk title and author
           const talk = this.talksList.find((t) => t.id === id);
           if (talk) {
             this.selectedTalkTitle = talk.title;
-            this.selectedTalkAuthor = talk.author; // Store the author's name
+            this.selectedTalkAuthor = talk.author;
           } else {
             this.selectedTalkTitle = "Charla no encontrada";
             this.selectedTalkAuthor = "";
@@ -166,34 +177,38 @@
         }
       },
       methods: {
-        async submitRegistration() {
-          if (!this.registration.acceptData) {
-            alert("Debes aceptar el procesamiento de tus datos.");
+        async checkEmailExists() {
+          if (!this.talks.email) {
+            this.emailExists = null;
             return;
           }
-  
+
+          const q = query(collection(db, "registrations"), where("email", "==", this.talks.email));
+          const querySnapshot = await getDocs(q);
+
+          this.emailExists = !querySnapshot.empty;
+        },
+        async submitTalks() {
+          if (!this.emailExists) {
+            alert("Este correo no está registrado. Por favor, regístrate primero.");
+            return;
+          }
+
           try {
-            await addDoc(collection(db, "registrations"), {
-              name: this.registration.name,
-              surnames: this.registration.surnames,
-              age: this.registration.age,
-              isStudent: this.registration.isStudent,
-              isacaMadrid: this.registration.isacaMadrid,
-              email: this.registration.email,
-              acceptData: this.registration.acceptData,
+            await addDoc(collection(db, "attendance"), {
+              email: this.talks.email,
+              talkId: this.talks.selectedTalk,
               timestamp: new Date(),
             });
-  
-            alert("Registro terminado!");
-            this.talks.email = this.registration.email;
-            this.currentTab = "talks";
+
+            alert("Asistencia registrada con éxito.");
           } catch (error) {
-            console.error("Error registrando usuario:", error);
-            alert("Hubo un error al registrar. Intenta de nuevo.");
+            alert("Hubo un error al registrar la asistencia. Intenta de nuevo.");
           }
         },
       },
     });
+
   </script>  
 
   <script type="module" src="js/firebase.js"></script>
