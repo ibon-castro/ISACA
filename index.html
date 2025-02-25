@@ -75,6 +75,7 @@
         <div class="form-group" v-if="selectedTalkTitle">
           <label>Charla seleccionada:</label>
           <p class="talk-title">{{ selectedTalkTitle }}</p>
+          <p class="talk-author">Autor: {{ selectedTalkAuthor }}</p>
           <!-- Hidden field to store the talk id -->
           <input type="hidden" v-model="talks.selectedTalk">
         </div>
@@ -105,14 +106,17 @@
         },
         talks: {
           email: '',
-          // Changed from an array to a single value since only one talk is selected.
           selectedTalk: ''
         },
         talksList: [
-          { id: 1, title: 'Talk 1: Cybersecurity Trends' },
-          { id: 2, title: 'Talk 2: Data Privacy' },
-          { id: 3, title: 'Talk 3: IT Governance' },
-          { id: 4, title: 'Talk 4: Cloud Computing' }
+          { id: 1, title: 'From Theory to Reality: Implementing ISACA’s Digital Trust Framework', author: 'Anass Abajtour' },
+          { id: 2, title: 'El auditor del futuro: Cómo la IA está transformando la profesión', author: 'Rafael Troncoso, Pablo González, Pablo Rodríguez, Karla Torres, Águeda de Lara. Modera: José Miguel Cardona' },
+          { id: 3, title: 'Auditando Arquitecturas Software Empresariales', author: 'Elías Grande' },
+          { id: 4, title: 'Active Directory: El eslabón crítico en la ciberseguridad corporativa', author: 'Alex Amorín' },
+          { id: 5, title: 'Orchestrated Insecurity: Breaking Down Common Container Vulnerabilities', author: 'Jose María Pulgar, Carlos Polop' },
+          { id: 6, title: 'LLM Security Audits 101: The Good, the Bad, and the Broken', author: 'Javier del Pino' },
+          { id: 7, title: 'Ciberseguridad industrial: El reto de auditar sin interrumpir', author: 'Erik de Pablo, Enrique Miranda, Ignacio García Egea, Manuel Ballesteros, Ander Galisteo. Modera: Juan José Nombela' },
+          { id: 8, title: 'Más allá del checkbox: Auditoría real de cumplimiento en la nueva era regulatoria', author: 'Andrés Porras, Xavier Sanz i Vives, Guillermo Martín, María Cristina Bausa Rosa, Josune Charola. Modera: Juan Galdon' }
         ],
         selectedTalkTitle: ''
       },
@@ -120,15 +124,17 @@
         const params = new URLSearchParams(window.location.search);
         const talkId = params.get('talk_id');
         if (talkId) {
-          // Convert to integer
           const id = parseInt(talkId);
           this.talks.selectedTalk = id;
-          // Find the talk title from talksList
+          
+          // Find the talk title and author
           const talk = this.talksList.find(t => t.id === id);
           if (talk) {
             this.selectedTalkTitle = talk.title;
+            this.selectedTalkAuthor = talk.author; // Store the author's name
           } else {
             this.selectedTalkTitle = "Charla no encontrada";
+            this.selectedTalkAuthor = "";
           }
         }
       },
