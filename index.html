@@ -4,9 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ISACA</title>
-  <!-- Link to external CSS -->
   <link rel="stylesheet" href="css/styles.css">
-  <!-- Vue.js -->
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 </head>
 <body>
@@ -116,7 +114,7 @@
   </div>
 
   <script type="module">
-    import { db, collection, addDoc } from "./js/firebase.js";
+    import { db, collection, addDoc, where, query } from "./js/firebase.js";
   
     new Vue({
       el: "#app",
