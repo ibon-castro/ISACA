@@ -174,7 +174,7 @@
           }
 
           try {
-            const q = query(collection(db, "registrations"), where("email", "==", this.talks.email));
+            const q = query(collection(db, "usuarios"), where("email", "==", this.talks.email));
             const querySnapshot = await getDocs(q);
             
             this.talks.emailExists = !querySnapshot.empty;
@@ -190,7 +190,7 @@
           }
   
           try {
-            await addDoc(collection(db, "registrations"), {
+            await addDoc(collection(db, "usuarios"), {
               name: this.registration.name,
               surnames: this.registration.surnames,
               age: this.registration.age,
@@ -218,7 +218,7 @@
           }
 
           try {
-            await addDoc(collection(db, "attendance"), {
+            await addDoc(collection(db, "asistencia"), {
               email: this.talks.email,
               talkId: this.talks.selectedTalk,
               timestamp: new Date(),
