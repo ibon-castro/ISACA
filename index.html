@@ -101,7 +101,7 @@
         <!-- Display the talk title if talk_id is provided -->
         <div class="form-group" v-if="selectedTalkTitle">
           <p class="talk-title">{{ selectedTalkTitle }}</p>
-          <p class="talk-author">Autor: {{ selectedTalkAuthor }}</p>
+          <p class="talk-author">{{ selectedTalkAuthor }}</p>
           <!-- Hidden field to store the talk id -->
           <input type="hidden" v-model="talks.selectedTalk">
         </div>
