@@ -73,6 +73,13 @@
         </div>
         <button type="submit">Registrarse</button>
       </form>
+      <!-- Custom Popup Modal -->
+      <div v-if="showModal" class="modal-overlay">
+        <div class="modal" :class="modalType">
+          <p>{{ modalMessage }}</p>
+          <button @click="closeModal">Cerrar</button>
+        </div>
+      </div>
     </div>
 
     <!-- Talks Selection Form -->
@@ -242,14 +249,6 @@
     });
   </script>    
   <script type="module" src="js/firebase.js"></script>
-  
-  <!-- Custom Popup Modal -->
-  <div v-if="showModal" class="modal-overlay">
-    <div class="modal" :class="modalType">
-      <p>{{ modalMessage }}</p>
-      <button @click="closeModal">Cerrar</button>
-    </div>
-  </div>
 
 </body>
 </html>
