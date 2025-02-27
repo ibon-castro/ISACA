@@ -235,19 +235,33 @@
         },
         async submitTalks() {
           await this.checkEmailExists();
-  
+
           if (!this.talks.emailExists) {
             this.showPopup("Este correo no está registrado. Por favor, regístrate primero.", "error");
             return;
           }
-  
+
           try {
+            // Check if attendance is already registered
+            const q = query(
+              collection(db, "asistencia"),
+              where("email", "==", this.talks.email),
+              where("talkId", "==", this.talks.selectedTalk)
+            );
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+              this.showPopup("Ya te has registrado a este evento.", "error");
+              return;
+            }
+
+            // If no record exists, register attendance
             await addDoc(collection(db, "asistencia"), {
               email: this.talks.email,
               talkId: this.talks.selectedTalk,
               timestamp: new Date(),
             });
-  
+
             this.showPopup("Asistencia registrada con éxito.");
           } catch (error) {
             this.showPopup("Hubo un error al registrar la asistencia. Intenta de nuevo.", "error");
