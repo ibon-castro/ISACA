@@ -234,23 +234,30 @@
           }
         },
         async submitTalks() {
-          await this.checkEmailExists();
-
-          if (!this.talks.emailExists) {
-            this.showPopup("Este correo no está registrado. Por favor, regístrate primero.", "error");
+          if (!this.talks.email) {
+            this.showPopup("Por favor, introduce tu correo electrónico.", "error");
             return;
           }
 
           try {
+            // Check if the email is registered
+            const userQuery = query(collection(db, "usuarios"), where("email", "==", this.talks.email));
+            const userSnapshot = await getDocs(userQuery);
+
+            if (userSnapshot.empty) {
+              this.showPopup("Aún no te has registrado. Por favor, regístrate.", "error");
+              return;
+            }
+
             // Check if attendance is already registered
-            const q = query(
+            const attendanceQuery = query(
               collection(db, "asistencia"),
               where("email", "==", this.talks.email),
               where("talkId", "==", this.talks.selectedTalk)
             );
-            const querySnapshot = await getDocs(q);
+            const attendanceSnapshot = await getDocs(attendanceQuery);
 
-            if (!querySnapshot.empty) {
+            if (!attendanceSnapshot.empty) {
               this.showPopup("Ya te has registrado a este evento.", "error");
               return;
             }
