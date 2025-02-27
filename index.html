@@ -122,6 +122,9 @@
       el: "#app",
       data: {
         currentTab: "talks",
+        showModal: false,
+        modalMessage: "",
+        modalType: "success", // "success" or "error"
         registration: {
           name: "",
           surnames: "",
@@ -159,7 +162,7 @@
           const talk = this.talksList.find((t) => t.id === id);
           if (talk) {
             this.selectedTalkTitle = talk.title;
-            this.selectedTalkAuthor = talk.author; // Store the author's name
+            this.selectedTalkAuthor = talk.author;
           } else {
             this.selectedTalkTitle = "Charla no encontrada";
             this.selectedTalkAuthor = "";
@@ -167,25 +170,32 @@
         }
       },
       methods: {
+        showPopup(message, type = "success") {
+          this.modalMessage = message;
+          this.modalType = type;
+          this.showModal = true;
+        },
+        closeModal() {
+          this.showModal = false;
+        },
         async checkEmailExists() {
           if (!this.talks.email) {
             this.talks.emailExists = false;
             return;
           }
-
+  
           try {
             const q = query(collection(db, "usuarios"), where("email", "==", this.talks.email));
             const querySnapshot = await getDocs(q);
-            
             this.talks.emailExists = !querySnapshot.empty;
           } catch (error) {
             console.error("Error checking email:", error);
-            this.talks.emailExists = false; // Ensure it disables the button on error
+            this.talks.emailExists = false;
           }
         },
         async submitRegistration() {
           if (!this.registration.acceptData) {
-            alert("Debes aceptar el procesamiento de tus datos.");
+            this.showPopup("Debes aceptar el procesamiento de tus datos.", "error");
             return;
           }
   
@@ -200,39 +210,46 @@
               acceptData: this.registration.acceptData,
             });
   
-            alert("Registro terminado!");
+            this.showPopup("Registro completado con éxito!");
             this.talks.email = this.registration.email;
             this.currentTab = "talks";
           } catch (error) {
             console.error("Error registrando usuario:", error);
-            alert("Hubo un error al registrar. Intenta de nuevo.");
+            this.showPopup("Hubo un error al registrar. Intenta de nuevo.", "error");
           }
         },
         async submitTalks() {
-          // Ensure email is checked first
           await this.checkEmailExists();
-
+  
           if (!this.talks.emailExists) {
-            alert("Este correo no está registrado. Por favor, regístrate primero.");
+            this.showPopup("Este correo no está registrado. Por favor, regístrate primero.", "error");
             return;
           }
-
+  
           try {
             await addDoc(collection(db, "asistencia"), {
               email: this.talks.email,
               talkId: this.talks.selectedTalk,
               timestamp: new Date(),
             });
-
-            alert("Asistencia registrada con éxito.");
+  
+            this.showPopup("Asistencia registrada con éxito.");
           } catch (error) {
-            alert("Hubo un error al registrar la asistencia. Intenta de nuevo.");
+            this.showPopup("Hubo un error al registrar la asistencia. Intenta de nuevo.", "error");
           }
         },
       },
     });
-  </script>  
-
+  </script>    
   <script type="module" src="js/firebase.js"></script>
+  
+  <!-- Custom Popup Modal -->
+  <div v-if="showModal" class="modal-overlay">
+    <div class="modal" :class="modalType">
+      <p>{{ modalMessage }}</p>
+      <button @click="closeModal">Cerrar</button>
+    </div>
+  </div>
+
 </body>
 </html>
