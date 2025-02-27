@@ -118,7 +118,6 @@
           <p class="error">No se ha especificado una charla en la URL.</p>
         </div>
 
-        <!--<button type="submit" :disabled="!talks.emailExists">He asistido</button>-->
         <button type="submit">He asistido</button>
       </form>
     </div>
@@ -149,27 +148,25 @@
           emailExists: null,
         },
         talksList: [
-          { id: 1, title: "From Theory to Reality: Implementing ISACA’s Digital Trust Framework", author: "Anass Abajtour" },
-          { id: 2, title: "El auditor del futuro: Cómo la IA está transformando la profesión", author: "Rafael Troncoso, Pablo González, Pablo Rodríguez, Karla Torres, Águeda de Lara. Modera: José Miguel Cardona" },
-          { id: 3, title: "Auditando Arquitecturas Software Empresariales", author: "Elías Grande" },
-          { id: 4, title: "Active Directory: El eslabón crítico en la ciberseguridad corporativa", author: "Alex Amorín" },
-          { id: 5, title: "Orchestrated Insecurity: Breaking Down Common Container Vulnerabilities", author: "Jose María Pulgar, Carlos Polop" },
-          { id: 6, title: "LLM Security Audits 101: The Good, the Bad, and the Broken", author: "Javier del Pino" },
-          { id: 7, title: "Ciberseguridad industrial: El reto de auditar sin interrumpir", author: "Erik de Pablo, Enrique Miranda, Ignacio García Egea, Manuel Ballesteros, Ander Galisteo. Modera: Juan José Nombela" },
-          { id: 8, title: "Más allá del checkbox: Auditoría real de cumplimiento en la nueva era regulatoria", author: "Andrés Porras, Xavier Sanz i Vives, Guillermo Martín, María Cristina Bausa Rosa, Josune Charola. Modera: Juan Galdon" }
+          { id: 1, code: "sTBj5FsF", title: "From Theory to Reality: Implementing ISACA’s Digital Trust Framework", author: "Anass Abajtour" },
+          { id: 2, code: "heW4NuTL", title: "El auditor del futuro: Cómo la IA está transformando la profesión", author: "Rafael Troncoso, Pablo González, Pablo Rodríguez, Karla Torres, Águeda de Lara. Modera: José Miguel Cardona" },
+          { id: 3, code: "FCQxfRaq", title: "Auditando Arquitecturas Software Empresariales", author: "Elías Grande" },
+          { id: 4, code: "zkjmnDkD", title: "Active Directory: El eslabón crítico en la ciberseguridad corporativa", author: "Alex Amorín" },
+          { id: 5, code: "WeSdSP3z", title: "Orchestrated Insecurity: Breaking Down Common Container Vulnerabilities", author: "Jose María Pulgar, Carlos Polop" },
+          { id: 6, code: "pDq84m9Q", title: "LLM Security Audits 101: The Good, the Bad, and the Broken", author: "Javier del Pino" },
+          { id: 7, code: "qzoTModm", title: "Ciberseguridad industrial: El reto de auditar sin interrumpir", author: "Erik de Pablo, Enrique Miranda, Ignacio García Egea, Manuel Ballesteros, Ander Galisteo. Modera: Juan José Nombela" },
+          { id: 8, code: "dhNfN7NX", title: "Más allá del checkbox: Auditoría real de cumplimiento en la nueva era regulatoria", author: "Andrés Porras, Xavier Sanz i Vives, Guillermo Martín, María Cristina Bausa Rosa, Josune Charola. Modera: Juan Galdon" }
         ],
         selectedTalkTitle: "",
       },
       mounted() {
         const params = new URLSearchParams(window.location.search);
-        const talkId = params.get("talk_id");
-        if (talkId) {
-          const id = parseInt(talkId);
-          this.talks.selectedTalk = id;
-  
-          // Find the talk title and author
-          const talk = this.talksList.find((t) => t.id === id);
+        const talkCode = params.get("id");
+
+        if (talkCode) {
+          const talk = this.talksList.find((t) => t.code === talkCode);
           if (talk) {
+            this.talks.selectedTalk = talk.id;
             this.selectedTalkTitle = talk.title;
             this.selectedTalkAuthor = talk.author;
           } else {
