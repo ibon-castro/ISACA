@@ -236,7 +236,7 @@
         async submitTalks() {
           await this.checkEmailExists();
   
-          if (!this.talks.emailExists === false) {
+          if (!this.talks.emailExists) {
             this.showPopup("Este correo no está registrado. Por favor, regístrate primero.", "error");
             return;
           }
