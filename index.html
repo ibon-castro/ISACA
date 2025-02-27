@@ -217,9 +217,16 @@
               acceptData: this.registration.acceptData,
             });
   
-            this.showPopup("Registro completado con éxito!");
+            this.showPopup("Registro completado con éxito!", "success");
             this.talks.email = this.registration.email;
-            this.currentTab = "talks";
+
+            // Delay switching tab until user closes the pop-up
+            this.modalType = "success";
+            this.closeModal = () => {
+              this.showModal = false;
+              this.currentTab = "talks";
+            };
+
           } catch (error) {
             console.error("Error registrando usuario:", error);
             this.showPopup("Hubo un error al registrar. Intenta de nuevo.", "error");
@@ -228,7 +235,7 @@
         async submitTalks() {
           await this.checkEmailExists();
   
-          if (!this.talks.emailExists) {
+          if (!this.talks.emailExists === false) {
             this.showPopup("Este correo no está registrado. Por favor, regístrate primero.", "error");
             return;
           }
