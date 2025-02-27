@@ -16,6 +16,14 @@
       ⚠️ Esto no es un CTF. Por favor, no intentéis tirar la web. Cualquier mal uso implicará la cancelación de la invitación.
     </p>
 
+    <!-- Custom Popup Modal -->
+    <div v-if="showModal" class="modal-overlay">
+      <div class="modal" :class="modalType">
+        <p>{{ modalMessage }}</p>
+        <button @click="closeModal">Cerrar</button>
+      </div>
+    </div>
+
     <!-- Navigation Tabs (Reversed Order) -->
     <div class="tabs">
       <button :class="{active: currentTab==='talks'}" @click="currentTab='talks'">Asistencia</button>
@@ -73,13 +81,6 @@
         </div>
         <button type="submit">Registrarse</button>
       </form>
-      <!-- Custom Popup Modal -->
-      <div v-if="showModal" class="modal-overlay">
-        <div class="modal" :class="modalType">
-          <p>{{ modalMessage }}</p>
-          <button @click="closeModal">Cerrar</button>
-        </div>
-      </div>
     </div>
 
     <!-- Talks Selection Form -->
