@@ -191,9 +191,9 @@
           }
   
           try {
-            const q = query(collection(db, "usuarios"), where("email", "==", this.talks.email));
-            const querySnapshot = await getDocs(q);
-            this.talks.emailExists = !querySnapshot.empty;
+            const docRef = doc(db, "usuarios", this.talks.email);
+            const docSnap = await getDoc(docRef);
+            this.talks.emailExists = docSnap.exists();
           } catch (error) {
             console.error("Error checking email:", error);
             this.talks.emailExists = false;
