@@ -124,15 +124,15 @@
   </div>
 
   <script type="module">
-    import { db, collection, addDoc, query, where, getDocs } from "./js/firebase.js";
-  
+    import { supabase } from "./js/supabase.js";
+
     new Vue({
       el: "#app",
       data: {
         currentTab: "talks",
         showModal: false,
         modalMessage: "",
-        modalType: "success", // "success" or "error"
+        modalType: "success",
         registration: {
           name: "",
           surnames: "",
@@ -188,24 +188,22 @@
             this.talks.emailExists = false;
             return;
           }
-  
-          try {
-            const docRef = doc(db, "usuarios", this.talks.email);
-            const docSnap = await getDoc(docRef);
-            this.talks.emailExists = docSnap.exists();
-          } catch (error) {
-            console.error("Error checking email:", error);
-            this.talks.emailExists = false;
-          }
+
+          let { data, error } = await supabase
+            .from("usuarios")
+            .select("email")
+            .eq("email", this.talks.email);
+
+          this.talks.emailExists = data.length > 0;
         },
         async submitRegistration() {
           if (!this.registration.acceptData) {
             this.showPopup("Debes aceptar el procesamiento de tus datos.", "error");
             return;
           }
-  
-          try {
-            await addDoc(collection(db, "usuarios"), {
+
+          let { error } = await supabase.from("usuarios").insert([
+            {
               name: this.registration.name,
               surnames: this.registration.surnames,
               age: this.registration.age,
@@ -213,21 +211,20 @@
               isacaMadrid: this.registration.isacaMadrid,
               email: this.registration.email,
               acceptData: this.registration.acceptData,
-            });
-  
+            },
+          ]);
+
+          if (error) {
+            console.error("Error registrando usuario:", error);
+            this.showPopup("Hubo un error al registrar. Intenta de nuevo.", "error");
+          } else {
             this.showPopup("Registro completado con éxito! Aquí tienes un descuento de 25% en todos los cursos de ISACA Madrid: Rooted25IM", "success");
             this.talks.email = this.registration.email;
-
-            // Delay switching tab until user closes the pop-up
             this.modalType = "success";
             this.closeModal = () => {
               this.showModal = false;
               this.currentTab = "talks";
             };
-
-          } catch (error) {
-            console.error("Error registrando usuario:", error);
-            this.showPopup("Hubo un error al registrar. Intenta de nuevo.", "error");
           }
         },
         async submitTalks() {
@@ -236,45 +233,44 @@
             return;
           }
 
-          try {
-            // Check if the email is registered
-            const userQuery = query(collection(db, "usuarios"), where("email", "==", this.talks.email));
-            const userSnapshot = await getDocs(userQuery);
+          let { data: user, error: userError } = await supabase
+            .from("usuarios")
+            .select("email")
+            .eq("email", this.talks.email);
 
-            if (userSnapshot.empty) {
-              this.showPopup("Aún no te has registrado. Por favor, regístrate.", "error");
-              return;
-            }
+          if (!user || user.length === 0) {
+            this.showPopup("Aún no te has registrado. Por favor, regístrate.", "error");
+            return;
+          }
 
-            // Check if attendance is already registered
-            const attendanceQuery = query(
-              collection(db, "asistencia"),
-              where("email", "==", this.talks.email),
-              where("talkId", "==", this.talks.selectedTalk)
-            );
-            const attendanceSnapshot = await getDocs(attendanceQuery);
+          let { data: attendance, error: attendanceError } = await supabase
+            .from("asistencia")
+            .select("email")
+            .eq("email", this.talks.email)
+            .eq("talkId", this.talks.selectedTalk);
 
-            if (!attendanceSnapshot.empty) {
-              this.showPopup("Ya te has registrado a este evento.", "error");
-              return;
-            }
+          if (attendance.length > 0) {
+            this.showPopup("Ya te has registrado a este evento.", "error");
+            return;
+          }
 
-            // If no record exists, register attendance
-            await addDoc(collection(db, "asistencia"), {
+          let { error } = await supabase.from("asistencia").insert([
+            {
               email: this.talks.email,
               talkId: this.talks.selectedTalk,
-              timestamp: new Date(),
-            });
+              timestamp: new Date().toISOString(),
+            },
+          ]);
 
-            this.showPopup("Asistencia registrada con éxito.");
-          } catch (error) {
+          if (error) {
             this.showPopup("Hubo un error al registrar la asistencia. Intenta de nuevo.", "error");
+          } else {
+            this.showPopup("Asistencia registrada con éxito.");
           }
         },
       },
     });
-  </script>    
-  <script type="module" src="js/firebase.js"></script>
+  </script>
 
 </body>
 </html>
