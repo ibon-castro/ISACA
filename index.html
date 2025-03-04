@@ -198,7 +198,7 @@
         },
         async submitRegistration() {
     try {
-        if (!this.registration.acceptData) { // Ensure user accepts terms before proceeding
+        if (!this.registration.acceptData) {
             this.showPopup("Debes aceptar el procesamiento de tus datos.", "error");
             return;
         }
