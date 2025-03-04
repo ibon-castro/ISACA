@@ -197,34 +197,36 @@
           this.talks.emailExists = data.length > 0;
         },
         async submitRegistration() {
-          if (!this.registration.acceptData) {
+    try {
+        if (!this.registration.acceptData) { // Ensure user accepts terms before proceeding
             this.showPopup("Debes aceptar el procesamiento de tus datos.", "error");
             return;
-          }
+        }
 
-          let { error } = await supabase.from("usuarios").insert([
-            {
-              name: this.registration.name,
-              surnames: this.registration.surnames,
-              age: this.registration.age,
-              isStudent: this.registration.isStudent,
-              isacaMadrid: this.registration.isacaMadrid,
-              email: this.registration.email,
-            },
-          ]);
+        const { name, surnames, age, isStudent, isacaMadrid, email } = this.registration;
 
-          if (error) {
-            console.error("Error registrando usuario:", error);
-            this.showPopup("Hubo un error al registrar. Intenta de nuevo.", "error");
-          } else {
-            this.showPopup("Registro completado con éxito! Aquí tienes un descuento de 25% en todos los cursos de ISACA Madrid: Rooted25IM", "success");
-            this.talks.email = this.registration.email;
-            this.modalType = "success";
-            this.closeModal = () => {
-              this.showModal = false;
-              this.currentTab = "talks";
-            };
-          }
+        const { data, error } = await supabase
+            .from("usuarios")
+            .insert([{ name, surnames, age, isStudent, isacaMadrid, email }]);
+
+        if (error) {
+            throw error;
+        }
+
+        this.registration = { name: "", surnames: "", age: null, isStudent: false, isacaMadrid: false, email: "", acceptData: false };
+        
+        this.showPopup("Registro completado con éxito!");
+
+        this.talks.email = email;
+        this.closeModal = () => {
+            this.showModal = false;
+            this.currentTab = "talks";
+        };
+
+            } catch (e) {
+                console.error("Error al registrar usuario:", e.message);
+                this.showPopup("Hubo un error al registrar. Intenta de nuevo.", "error");
+            }
         },
         async submitTalks() {
           if (!this.talks.email) {
